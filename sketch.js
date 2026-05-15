@@ -1,5 +1,5 @@
 await Canvas();
-world.gravity.y = 10;
+world.gravity.y = 7.5;
 
 let ball = new Sprite();
 ball.diameter = 50;
