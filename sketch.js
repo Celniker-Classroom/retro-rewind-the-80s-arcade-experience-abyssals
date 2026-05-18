@@ -1,10 +1,13 @@
+//create world
 await Canvas(400, 600); 
 displayMode(CENTER, PIXELATED, 1);
 allSprites.pixelPerfect = true;
 world.gravity.y = 7.5;
 
+//set game to start
 let gameState = 'start'; 
 
+//player sprite created
 let player = new Sprite(200, 320);
 player.width = 50;
 player.height = 64;
@@ -13,6 +16,7 @@ player.stroke = '#ff007f';
 player.strokeWeight = 3;
 player.physics = 'kinematic';
 
+//play button sprite created
 let playButton = new Sprite(200, 450); 
 playButton.width = 220;
 playButton.height = 70;
@@ -20,11 +24,11 @@ playButton.color = '#ff007f';
 playButton.stroke = '#00f0ff';
 playButton.strokeWeight = 3;
 playButton.physics = 'static';
-
 playButton.text = "PLAY";
 playButton.textSize = 24;
 playButton.textColor = '#ffffff';
 
+//startgame function (to be called upon click of playbutton)
 function startGame() {
     gameState = 'playing';
     playButton.visible = false;
@@ -32,8 +36,9 @@ function startGame() {
     player.physics = 'dynamic';
 }
 
+//draw start screen function (to be called upon game loading in, issue with loading must be resolved)
 function drawStartScreen() {
-    background('#1a0033');
+    background('#7929c4');
 
     stroke('#ff007f');
     strokeWeight(1);
@@ -68,8 +73,9 @@ function drawStartScreen() {
     allSprites.draw(); 
 }
 
+//drawgame function (to be called upon click of playbutton)
 function drawGame() {
-    background('#000000');
+    background('#ce3b3b');
     
     if (mouse.presses() || kb.presses('space')) {
         player.vel.y = -5;
