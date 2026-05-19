@@ -1,5 +1,5 @@
 //create world
-await Canvas(400, 600); 
+await Canvas(1000, 600); 
 displayMode(CENTER, PIXELATED, 1);
 allSprites.pixelPerfect = true;
 world.gravity.y = 7.5;
@@ -10,7 +10,8 @@ console.log("you found an easter egg! find some good news here: https://boulderb
 let gameState = 'start'; 
 
 //player sprite created
-let player = new Sprite(200, 320);
+// FIX: Set X to 500 so it sits dead center
+let player = new Sprite(500, 320);
 player.width = 50;
 player.height = 64;
 player.color = '#00f0ff';
@@ -19,7 +20,8 @@ player.strokeWeight = 3;
 player.physics = 'kinematic';
 
 //play button sprite created
-let playButton = new Sprite(200, 450); 
+// FIX: Set X to 500 so it sits dead center
+let playButton = new Sprite(500, 450); 
 playButton.width = 220;
 playButton.height = 70;
 playButton.color = '#ff007f';
@@ -58,7 +60,7 @@ function drawStartScreen() {
     fill('#ff007f');
     text('BigBacks', width / 2, 150);
 
-    // --- FIX: Wrap everything requiring playButton.mouse in a safety check ---
+    // --- FIX: Wrap everything requiring playButton.mouse in a safety check --- thank you gemini for fixing this
     if (playButton.mouse) {
         if (playButton.mouse.hovering()) {
             playButton.color = '#00f0ff';
