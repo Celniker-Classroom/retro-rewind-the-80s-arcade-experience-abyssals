@@ -4,6 +4,8 @@ displayMode(CENTER, PIXELATED, 1);
 allSprites.pixelPerfect = true;
 world.gravity.y = 7.5;
 
+console.log("you found an easter egg! find some good news here: https://boulderbugle.com/canyon-crest-academys-envision-instrumental-music-program-named-best-in-california-in-latest-usnews-poll-YEihccEc")
+
 //set game to start
 let gameState = 'start'; 
 
@@ -56,18 +58,21 @@ function drawStartScreen() {
     fill('#ff007f');
     text('BigBacks', width / 2, 150);
 
-    if (playButton.mouse.hovering()) {
-        playButton.color = '#00f0ff';
-        playButton.stroke = '#ff007f';
-        cursor(HAND);
-    } else {
-        playButton.color = '#ff007f';
-        playButton.stroke = '#00f0ff';
-        cursor(ARROW);
-    }
-    
-    if (playButton.mouse.presses()) {
-        startGame();
+    // --- FIX: Wrap everything requiring playButton.mouse in a safety check ---
+    if (playButton.mouse) {
+        if (playButton.mouse.hovering()) {
+            playButton.color = '#00f0ff';
+            playButton.stroke = '#ff007f';
+            cursor(HAND);
+        } else {
+            playButton.color = '#ff007f';
+            playButton.stroke = '#00f0ff';
+            cursor(ARROW);
+        }
+        
+        if (playButton.mouse.presses()) {
+            startGame();
+        }
     }
 
     allSprites.draw(); 
@@ -88,6 +93,7 @@ function drawGame() {
     
     allSprites.draw(); 
 }
+
 
 q5.update = function () {
     if (gameState === 'start') {
