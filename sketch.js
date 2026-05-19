@@ -4,13 +4,10 @@ displayMode(CENTER, PIXELATED, 1);
 allSprites.pixelPerfect = true;
 world.gravity.y = 7.5;
 
-console.log("you found an easter egg! find some good news here: https://boulderbugle.com/canyon-crest-academys-envision-instrumental-music-program-named-best-in-california-in-latest-usnews-poll-YEihccEc")
-
 //set game to start
 let gameState = 'start'; 
 
 //player sprite created
-// FIX: Set X to 500 so it sits dead center
 let player = new Sprite(500, 320);
 player.width = 50;
 player.height = 64;
@@ -20,7 +17,6 @@ player.strokeWeight = 3;
 player.physics = 'kinematic';
 
 //play button sprite created
-// FIX: Set X to 500 so it sits dead center
 let playButton = new Sprite(500, 450); 
 playButton.width = 220;
 playButton.height = 70;
@@ -60,7 +56,7 @@ function drawStartScreen() {
     fill('#ff007f');
     text('BigBacks', width / 2, 150);
 
-    // --- FIX: Wrap everything requiring playButton.mouse in a safety check --- thank you gemini for fixing this
+    //FIX: Wrap everything requiring playButton.mouse in a safety check
     if (playButton.mouse) {
         if (playButton.mouse.hovering()) {
             playButton.color = '#00f0ff';
