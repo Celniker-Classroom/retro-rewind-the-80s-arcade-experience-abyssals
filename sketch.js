@@ -1,5 +1,5 @@
 //create world
-await Canvas(1000, 600); 
+await Canvas(800, 550); 
 displayMode(CENTER, PIXELATED, 1);
 allSprites.pixelPerfect = true;
 world.gravity.y = 7.5;
@@ -8,7 +8,9 @@ world.gravity.y = 7.5;
 let gameState = 'start'; 
 
 //player sprite created
-let player = new Sprite(500, 320);
+let player = new Sprite();
+player.x = 0;
+player.y = -25;
 player.width = 50;
 player.height = 64;
 player.color = '#00f0ff';
@@ -17,7 +19,7 @@ player.strokeWeight = 3;
 player.physics = 'kinematic';
 
 //play button sprite created
-let playButton = new Sprite(500, 450); 
+let playButton = new Sprite(); 
 playButton.width = 220;
 playButton.height = 70;
 playButton.color = '#ff007f';
@@ -52,9 +54,9 @@ function drawStartScreen() {
     textSize(54);
     textAlign(CENTER, CENTER);
     fill('#00f0ff');
-    text('BigBacks', width / 2 + 4, 150 + 4);
+    text('BigBacks', -2, 0 + 4);
     fill('#ff007f');
-    text('BigBacks', width / 2, 150);
+    text('BigBacks', 0, 0);
 
     //FIX: Wrap everything requiring playButton.mouse in a safety check
     if (playButton.mouse) {
