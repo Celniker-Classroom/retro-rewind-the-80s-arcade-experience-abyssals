@@ -29,12 +29,14 @@ playButton.stroke = '#00f0ff';
 playButton.strokeWeight = 3;
 playButton.collider = 'static';
 
+//start game function, called upon button press
 function startGame() {
     gameState = 'playing';
     playButton.visible = false;
     player.physics = 'dynamic';
 }
 
+//creates start screen
 function drawStartScreen() {
     background('#f1f0d1');
 
@@ -76,12 +78,7 @@ function drawGame() {
     if (mouse.presses() || kb.presses('space')) {
         player.vel.y = -5;
     }
-
-    fill('#00f0ff');
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text('Game started', 0, 0);
-
+    
     allSprites.draw();
 }
 
