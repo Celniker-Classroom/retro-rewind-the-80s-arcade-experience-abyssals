@@ -11,13 +11,20 @@ let player, playButton;
 // CREATE SPRITES HERE
 player = new Sprite();
 player.x = 0;
-player.y = -25;
+player.y = 0;
 player.w = 50;
 player.h = 64;
 player.color = '#00f0ff';
 player.stroke = '#ff007f';
 player.strokeWeight = 3;
-player.physics = 'kinematic';
+player.collider = 'kinematic';
+
+ground = new Sprite();
+ground.y = 250;
+ground.w = 800;
+ground.h = 40;
+ground.collider = 'static';
+ground.visible = false;
 
 playButton = new Sprite();
 playButton.x = 0;
@@ -33,7 +40,7 @@ playButton.collider = 'static';
 function startGame() {
     gameState = 'playing';
     playButton.visible = false;
-    player.physics = 'dynamic';
+    player.collider = 'dynamic';
 }
 
 //creates start screen
