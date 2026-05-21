@@ -90,6 +90,7 @@ function drawGame() {
     // player movement (flappy jump)
     if (mouse.presses() || kb.presses('space')) {
         player.vel.y = -6;
+        console.log("test");
     }
 
     // spawn logic
