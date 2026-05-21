@@ -2,7 +2,7 @@
 await Canvas(800, 550);
 displayMode(CENTER, PIXELATED, 1);
 allSprites.pixelPerfect = true;
-world.gravity.y = 7.5;
+world.gravity.y = 6.5; 
 
 //global var
 let gameState = 'start';
@@ -50,8 +50,6 @@ function startGame() {
 
 //creates start screen
 function drawStartScreen() {
-    background('#f1f0d1');
-
     fill('#085f1b');
     textSize(54);
     textAlign(CENTER, CENTER);
@@ -59,7 +57,6 @@ function drawStartScreen() {
 
     // BUTTON
     rectMode(CENTER);
-
     fill('#085f1b');
     rect(playButton.x, playButton.y, playButton.w, playButton.h);
 
@@ -68,7 +65,7 @@ function drawStartScreen() {
     textAlign(CENTER, CENTER);
     text('PLAY', playButton.x, playButton.y);
 
-    // Click detection
+    // YOUR BULLETPROOF MANUAL CLICK DETECTION
     if (mouse.presses()) {
         const insideButton =
             mouse.x > playButton.x - playButton.w / 2 &&
@@ -76,20 +73,16 @@ function drawStartScreen() {
             mouse.y > playButton.y - playButton.h / 2 &&
             mouse.y < playButton.y + playButton.h / 2;
 
-    if (insideButton) {
-        startGame();
+        if (insideButton) {
+            startGame();
+        }
     }
 }
 
-    allSprites.draw();
-}
-
 function drawGame() {
-    background('#f1f0d1');
-
     // player movement (flappy jump)
     if (mouse.presses() || kb.presses('space')) {
-        player.vel.y = -6;
+        player.vel.y = -12; 
         console.log("test");
     }
 
@@ -109,7 +102,6 @@ function drawGame() {
         let l = lettuces[i];
 
         if (player.overlaps(l)) {
-            // simple penalty: reset score
             score = max(0, score - 1);
             l.remove();
             lettuces.splice(i, 1);
@@ -144,13 +136,11 @@ function drawGame() {
     textSize(24);
     textAlign(LEFT, TOP);
     text('Score: ' + score, -380, -250);
-
-    allSprites.draw();
 }
 
 function spawnLettuce() {
     let l = new Sprite();
-    l.img = 'sprites/lettuce.png'; // or set later if needed
+    l.img = 'sprites/lettuce.png'; 
     l.x = 450;
     l.y = random(-200, 200);
     l.w = 50;
@@ -159,6 +149,7 @@ function spawnLettuce() {
     l.collider = 'static';
 
     lettuces.push(l);
+    console.log("lettuce spawned");
 }
 
 function spawnBurger() {
@@ -172,11 +163,27 @@ function spawnBurger() {
     b.collider = 'static';
 
     burgers.push(b);
+    console.log("burger spawned");
 }
 
+// MASTER CONTROLLER LOOP
 q5.update = function () {
+    // 1. Wipe canvas first
+    background('#f1f0d1');
+
+    // 2. Keep physics running behind the scenes
     world.step();
 
+    // 3. Keep camera forced to center view so sprites aren't rendered off screen
+    camera.x = 0;
+    camera.y = 0;
+
+    // 4. Force engine to draw everything cleanly onto our viewport matrix
+    camera.on();
+    allSprites.draw();
+    camera.off();
+
+    // 5. Draw text and states over the sprites
     if (gameState === 'start') {
         drawStartScreen();
     } else {
