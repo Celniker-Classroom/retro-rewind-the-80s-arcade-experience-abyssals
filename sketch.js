@@ -43,7 +43,7 @@ function drawStartScreen() {
     fill('#085f1b');
     textSize(54);
     textAlign(CENTER, CENTER);
-    text('BigBacks', 0, 0);
+    text('BigBacks', 0, -45);
 
     // BUTTON
     rectMode(CENTER);
