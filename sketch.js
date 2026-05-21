@@ -1,8 +1,9 @@
 //create world
 await Canvas(800, 550);
 displayMode(CENTER, PIXELATED, 1);
+
 allSprites.pixelPerfect = true;
-world.gravity.y = 6.5; 
+world.gravity.y = 6.5;
 
 //global var
 let gameState = 'start';
@@ -15,15 +16,22 @@ let burgers = [];
 
 // CREATE SPRITES HERE
 player = new Sprite();
+player.img = 'sprites/player.png';
+
 player.x = 0;
 player.y = -25;
 player.w = 50;
 player.h = 64;
+
 player.color = '#00f0ff';
 player.stroke = '#ff007f';
 player.strokeWeight = 3;
-player.collider = 'kinematic';
 
+player.collider = 'dynamic';
+player.rotationLock = true;
+player.sleeping = true; // freeze until game starts
+
+// ground
 let ground = new Sprite();
 ground.y = 250;
 ground.w = 800;
@@ -31,6 +39,7 @@ ground.h = 40;
 ground.collider = 'static';
 ground.visible = false;
 
+// play button
 playButton = new Sprite();
 playButton.x = 0;
 playButton.y = 100;
@@ -41,31 +50,29 @@ playButton.stroke = '#00f0ff';
 playButton.strokeWeight = 3;
 playButton.collider = 'static';
 
-//start game function, called upon button press
+//start game
 function startGame() {
     gameState = 'playing';
     playButton.visible = false;
-    player.collider = 'dynamic';
+
+    player.sleeping = false; // unfreeze player
 }
 
-//creates start screen
+// start screen
 function drawStartScreen() {
     fill('#085f1b');
     textSize(54);
     textAlign(CENTER, CENTER);
     text('BigBacks', 0, -45);
 
-    // BUTTON
     rectMode(CENTER);
     fill('#085f1b');
     rect(playButton.x, playButton.y, playButton.w, playButton.h);
 
     fill('#ffffff');
     textSize(24);
-    textAlign(CENTER, CENTER);
     text('PLAY', playButton.x, playButton.y);
 
-    // YOUR BULLETPROOF MANUAL CLICK DETECTION
     if (mouse.presses()) {
         const insideButton =
             mouse.x > playButton.x - playButton.w / 2 &&
@@ -73,33 +80,29 @@ function drawStartScreen() {
             mouse.y > playButton.y - playButton.h / 2 &&
             mouse.y < playButton.y + playButton.h / 2;
 
-        if (insideButton) {
-            startGame();
-        }
+        if (insideButton) startGame();
     }
 }
 
+// GAME LOOP
 function drawGame() {
-    // player movement (flappy jump)
+
+    // jump
     if (mouse.presses() || kb.presses('space')) {
-        player.vel.y = -12; 
-        console.log("test");
+        player.vel.y = -12;
     }
 
-    // spawn logic
     tick++;
 
-    if (tick % 90 === 0) {
-        spawnLettuce();
-    }
+    if (tick % 150 === 0) spawnLettuce();
+    if (tick % 130 === 0) spawnBurger();
 
-    if (tick % 140 === 0) {
-        spawnBurger();
-    }
-
-    // lettuce collision (lose or reset position)
+    // LETTUCE
     for (let i = lettuces.length - 1; i >= 0; i--) {
         let l = lettuces[i];
+
+        l.vel.x = -2.5;          // MOVE LEFT (kinematic works)
+        l.collider = 'kinematic';
 
         if (player.overlaps(l)) {
             score = max(0, score - 1);
@@ -114,9 +117,12 @@ function drawGame() {
         }
     }
 
-    // burger collision (score gain)
+    // BURGER
     for (let i = burgers.length - 1; i >= 0; i--) {
         let b = burgers[i];
+
+        b.vel.x = -2;
+        b.collider = 'kinematic';
 
         if (player.overlaps(b)) {
             score += 1;
@@ -131,59 +137,59 @@ function drawGame() {
         }
     }
 
-    // draw score
+    // SCORE
     fill('#085f1b');
     textSize(24);
     textAlign(LEFT, TOP);
     text('Score: ' + score, -380, -250);
 }
 
+// spawn lettuce
 function spawnLettuce() {
     let l = new Sprite();
-    l.img = 'sprites/lettuce.png'; 
-    l.x = 450;
+    l.img = 'sprites/lettuce.png';
+
+    l.x = 380;
     l.y = random(-200, 200);
-    l.w = 50;
-    l.h = 50;
-    l.vel.x = -4;
-    l.collider = 'static';
+    l.w = 45;
+    l.h = 45;
+
+    l.collider = 'kinematic';
+    l.vel.x = -2.5;
 
     lettuces.push(l);
-    console.log("lettuce spawned");
 }
 
+// spawn burger (animated)
 function spawnBurger() {
     let b = new Sprite();
     b.img = 'sprites/burger.png';
-    b.x = 450;
+
+    b.x = 380;
     b.y = random(-200, 200);
-    b.w = 45;
-    b.h = 45;
-    b.vel.x = -4;
-    b.collider = 'static';
+    b.w = 50;
+    b.h = 50;
+
+    b.collider = 'kinematic';
+    b.vel.x = -2;
 
     burgers.push(b);
-    console.log("burger spawned");
 }
 
-// MASTER CONTROLLER LOOP
+// MASTER LOOP
 q5.update = function () {
-    // 1. Wipe canvas first
+
     background('#f1f0d1');
 
-    // 2. Keep physics running behind the scenes
     world.step();
 
-    // 3. Keep camera forced to center view so sprites aren't rendered off screen
     camera.x = 0;
     camera.y = 0;
 
-    // 4. Force engine to draw everything cleanly onto our viewport matrix
     camera.on();
     allSprites.draw();
     camera.off();
 
-    // 5. Draw text and states over the sprites
     if (gameState === 'start') {
         drawStartScreen();
     } else {
