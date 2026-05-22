@@ -3,7 +3,6 @@ await Canvas(800, 550);
 displayMode(CENTER, PIXELATED, 1);
 
 allSprites.pixelPerfect = true;
-world.gravity.y = 6.5;
 
 //global var
 let gameState = 'start';
@@ -19,8 +18,8 @@ player = new Sprite();
 player.img = 'sprites/player.png';
 player.x = 0;
 player.y = -25;
-player.w = 50;
-player.h = 64;
+player.w = 100;
+player.h = 100;
 player.color = '#00f0ff';
 player.stroke = '#ff007f';
 player.strokeWeight = 3;
@@ -30,7 +29,7 @@ player.sleeping = true; // freeze until game starts
 
 // ground
 let ground = new Sprite();
-ground.y = 250;
+ground.y = -275;
 ground.w = 800;
 ground.h = 40;
 ground.collider = 'static';
@@ -47,7 +46,7 @@ playButton.stroke = '#00f0ff';
 playButton.strokeWeight = 3;
 playButton.collider = 'static';
 
-//start game
+// start game
 function startGame() {
     gameState = 'playing';
     playButton.visible = false;
@@ -57,6 +56,7 @@ function startGame() {
 
 // start screen
 function drawStartScreen() {
+    world.gravity.y = 0;
     fill('#085f1b');
     textSize(54);
     textAlign(CENTER, CENTER);
@@ -85,10 +85,11 @@ function drawStartScreen() {
 
 // GAME LOOP
 function drawGame() {
+    world.gravity.y = 6.5;
     player.visible = true;
     // jump
     if (mouse.presses() || kb.presses('space')) {
-        player.vel.y = -12;
+        player.vel.y = -4;
     }
 
     tick++;
