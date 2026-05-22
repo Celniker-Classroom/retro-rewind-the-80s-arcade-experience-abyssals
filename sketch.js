@@ -14,19 +14,16 @@ let tick = 0;
 let lettuces = [];
 let burgers = [];
 
-// CREATE SPRITES HERE
+// player
 player = new Sprite();
 player.img = 'sprites/player.png';
-
 player.x = 0;
 player.y = -25;
 player.w = 50;
 player.h = 64;
-
 player.color = '#00f0ff';
 player.stroke = '#ff007f';
 player.strokeWeight = 3;
-
 player.collider = 'dynamic';
 player.rotationLock = true;
 player.sleeping = true; // freeze until game starts
@@ -69,6 +66,8 @@ function drawStartScreen() {
     fill('#085f1b');
     rect(playButton.x, playButton.y, playButton.w, playButton.h);
 
+    player.visible = false;
+
     fill('#ffffff');
     textSize(24);
     text('PLAY', playButton.x, playButton.y);
@@ -86,7 +85,7 @@ function drawStartScreen() {
 
 // GAME LOOP
 function drawGame() {
-
+    player.visible = true;
     // jump
     if (mouse.presses() || kb.presses('space')) {
         player.vel.y = -12;
