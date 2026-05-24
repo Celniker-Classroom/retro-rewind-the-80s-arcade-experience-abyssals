@@ -25,7 +25,6 @@ player.diameter = 56;
 player.collider = 'dynamic';
 player.rotationLock = true;
 player.sleeping = true;
-player.debug = true;
 
 // ground
 let ground = new Sprite();
@@ -35,9 +34,18 @@ ground.w = 800;
 ground.h = 40;
 ground.physics = STATIC;
 ground.color = '#654321';
-ground.visible = true;
+ground.visible = false;
 ground.rotationLock = true;
-ground.debug = true;
+
+let ceiling = new Sprite();
+ceiling.x = 0;
+ceiling.y = -250;
+ceiling.w = 800;
+ceiling.h = 40;
+ceiling.physics = STATIC;
+ceiling.color = '#654321';
+ceiling.visible = false;
+ceiling.rotationLock = true;
 
 // play button
 let playButton = {
@@ -50,6 +58,8 @@ let playButton = {
 // START GAME
 function startGame() {
     gameState = 'playing';
+    ground.visible = true;
+    ceiling.visible = true;
     player.visible = true;
     player.sleeping = false;
     player.vel.x = 0;
@@ -116,11 +126,11 @@ function drawGame() {
 
     tick++;
 
-    if (tick % 70 === 0) {
+    if (tick % 40 === 0) {
         spawnLettuce();
     }
 
-    if (tick % 140 === 0) {
+    if (tick % 160 === 0) {
         spawnBurger();
     }
 
@@ -129,7 +139,10 @@ function drawGame() {
     let burgersToRemove = [];
 
     // LETTUCE
+    // LETTUCE
     for (let l of lettuces) {
+        if (!l.active) continue;
+
         if (player.overlaps(l)) {
             score = max(0, score - 1);
             lettucesToRemove.push(l);
@@ -142,11 +155,12 @@ function drawGame() {
 
     // BURGER
     for (let b of burgers) {
+        if (!b.active) continue;
+
         if (player.overlaps(b)) {
             score += 1;
-            burgersToRemove.push(b);
+        burgersToRemove.push(b);
         }
-
         else if (b.x < -450) {
             burgersToRemove.push(b);
         }
@@ -155,29 +169,29 @@ function drawGame() {
     for (let l of lettucesToRemove) {
         l.active = false;
         l.visible = false;
+        l.collider = 'none';
         l.x = -9999;
         l.y = -9999;
         l.vel.x = 0;
+        l.vel.y = 0;
     }
 
     for (let b of burgersToRemove) {
         b.active = false;
         b.visible = false;
+        b.collider = 'none';
         b.x = -9999;
         b.y = -9999;
         b.vel.x = 0;
-    }
+        b.vel.y = 0;
+    }  
 
     // score
     fill('#085f1b');
     strokeWeight(0);
     textSize(24);
     textAlign(LEFT, TOP);
-    text(
-        'Score: ' + score,
-        -380,
-        -250
-    );
+    text('Score: ' + score, -380, -220);
 }
 
 // spawn lettuce
@@ -186,12 +200,12 @@ function spawnLettuce() {
     l.img = 'sprites/lettuce.png';
     l.x = 380;
     l.y = random(-200, 200);
-    l.diameter = 22;
+    l.scale = 1.5;
+    l.diameter = 33;
     l.collider = 'sensor';
     l.gravityScale = 0;
     l.vel.x = -2.5;
     l.rotationLock = true;
-    l.debug = true;
     l.active = true;
 }
 
@@ -201,13 +215,13 @@ function spawnBurger() {
     b.img = 'sprites/burger.png';
     b.x = 380;
     b.y = random(-200, 200);
-    b.w = 30;
-    b.h = 24;
+    b.w = 26;
+    b.h = 30;
+    b.scale = 1.5;
     b.collider = 'sensor';
     b.gravityScale = 0;
-    b.vel.x = -2;
+    b.vel.x = -5;
     b.rotationLock = true;
-    b.debug = true;
     b.active = true;
 }
 
