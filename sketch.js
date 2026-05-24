@@ -1,15 +1,17 @@
 //create world
 await Canvas(800, 550);
 displayMode(CENTER, PIXELATED, 1);
-
 allSprites.pixelPerfect = true;
 
 //global var
 let gameState = 'start';
-let player, playButton;
+
+let player;
+
 let score = 0;
 let tick = 0;
 
+// groups
 let lettuces = new Group();
 let burgers = new Group();
 
@@ -18,39 +20,36 @@ player = new Sprite();
 player.img = 'sprites/player.png';
 player.x = 0;
 player.y = -25;
-player.w = 1;
-player.h = 34;
-player.color = '#00f0ff';
-player.stroke = '#ff007f';
-player.strokeWeight = 3;
+player.scale = 2;
+player.diameter = 56;
 player.collider = 'dynamic';
 player.rotationLock = true;
-player.sleeping = true; // freeze until game starts
+player.sleeping = true;
+player.debug = true;
 
 // ground
 let ground = new Sprite();
+ground.x = 0;
 ground.y = 250;
 ground.w = 800;
-ground.h = 30;
+ground.h = 40;
 ground.physics = STATIC;
 ground.color = '#654321';
 ground.visible = true;
+ground.rotationLock = true;
+ground.debug = true;
 
 // play button
-playButton = new Sprite();
-playButton.x = 0;
-playButton.y = 100;
-playButton.w = 220;
-playButton.h = 70;
-playButton.color = '#ff007f';
-playButton.stroke = '#00f0ff';
-playButton.strokeWeight = 3;
+let playButton = {
+    x: 0,
+    y: 100,
+    w: 220,
+    h: 70
+};
 
-
-// start game
+// START GAME
 function startGame() {
     gameState = 'playing';
-    playButton.visible = false;
     player.visible = true;
     player.sleeping = false;
     player.vel.x = 0;
@@ -58,134 +57,171 @@ function startGame() {
     player.rotation = 0;
 }
 
-// start screen
+// START SCREEN
 function drawStartScreen() {
     world.gravity.y = 0;
     fill('#085f1b');
     textSize(54);
     textAlign(CENTER, CENTER);
+    strokeWeight(0);
     text('BigBacks', 0, -45);
 
+    // button
     rectMode(CENTER);
     fill('#085f1b');
-    rect(playButton.x, playButton.y, playButton.w, playButton.h);
+    stroke('#085f1b');
+    strokeWeight(3);
+    rect(
+        playButton.x,
+        playButton.y,
+        playButton.w,
+        playButton.h
+    );
 
     player.visible = false;
 
+    // button text
     fill('#ffffff');
+    strokeWeight(0);
     textSize(24);
-    text('PLAY', playButton.x, playButton.y);
+    text(
+        'PLAY',
+        playButton.x,
+        playButton.y
+    );
 
+    // click detection
     if (mouse.presses()) {
         const insideButton =
             mouse.x > playButton.x - playButton.w / 2 &&
             mouse.x < playButton.x + playButton.w / 2 &&
             mouse.y > playButton.y - playButton.h / 2 &&
             mouse.y < playButton.y + playButton.h / 2;
-
-        if (insideButton) startGame();
+        if (insideButton) {
+            startGame();
+        }
     }
 }
 
-// GAME LOOP
+// game loop
 function drawGame() {
     world.gravity.y = 6.5;
     player.visible = true;
     player.vel.x = 0;
-    // jump
+    player.rotation = 0;
+
     if (mouse.presses() || kb.presses('space')) {
         player.vel.y = -4;
     }
 
     tick++;
 
-    if (tick % 150 === 0) spawnLettuce();
-    if (tick % 130 === 0) spawnBurger();
+    if (tick % 180 === 0) {
+        spawnLettuce();
+    }
+
+    if (tick % 150 === 0) {
+        spawnBurger();
+    }
+
+    // REMOVE LISTS
+    let lettucesToRemove = [];
+    let burgersToRemove = [];
 
     // LETTUCE
-    for (let i = lettuces.length - 1; i >= 0; i--) {
-        let l = lettuces[i];
-        l.vel.x = -2.5;
-
+    for (let l of lettuces) {
         if (player.overlaps(l)) {
             score = max(0, score - 1);
-            l.remove();
-            lettuces.splice(i, 1);
-            continue;
+            lettucesToRemove.push(l);
         }
 
-        if (l.x < -450) {
-            l.remove();
-            lettuces.splice(i, 1);
+        else if (l.x < -450) {
+            lettucesToRemove.push(l);
         }
     }
 
     // BURGER
-    for (let i = burgers.length - 1; i >= 0; i--) {
-        let b = burgers[i];
-        b.vel.x = -2;
-
+    for (let b of burgers) {
         if (player.overlaps(b)) {
             score += 1;
-            b.remove();
-            burgers.splice(i, 1);
-            continue;
+            burgersToRemove.push(b);
         }
 
-        if (b.x < -450) {
-            b.remove();
-            burgers.splice(i, 1);
+        else if (b.x < -450) {
+            burgersToRemove.push(b);
         }
     }
 
-    // SCORE
+    for (let l of lettucesToRemove) {
+        l.active = false;
+        l.visible = false;
+        l.x = -9999;
+        l.y = -9999;
+        l.vel.x = 0;
+    }
+
+    for (let b of burgersToRemove) {
+        b.active = false;
+        b.visible = false;
+        b.x = -9999;
+        b.y = -9999;
+        b.vel.x = 0;
+    }
+
+    // score
     fill('#085f1b');
+    strokeWeight(0);
     textSize(24);
     textAlign(LEFT, TOP);
-    text('Score: ' + score, -380, -250);
+    text(
+        'Score: ' + score,
+        -380,
+        -250
+    );
 }
 
 // spawn lettuce
 function spawnLettuce() {
-    let l = new Sprite();
+    let l = new lettuces.Sprite();
     l.img = 'sprites/lettuce.png';
     l.x = 380;
     l.y = random(-200, 200);
-    l.w = 45;
-    l.h = 45;
-    l.gravityScale = 0;
-    l.collider = 'none';
+    l.diameter = 22;
+    l.collider = 'sensor';
     l.gravityScale = 0;
     l.vel.x = -2.5;
     l.rotationLock = true;
-    lettuces.push(l);
+    l.debug = true;
+    l.active = true;
 }
 
 // spawn burger
 function spawnBurger() {
-    let b = new Sprite();
+    let b = new burgers.Sprite();
     b.img = 'sprites/burger.png';
     b.x = 380;
     b.y = random(-200, 200);
-    b.w = 50;
-    b.h = 50;
-    b.collider = 'none';
+    b.w = 30;
+    b.h = 24;
+    b.collider = 'sensor';
     b.gravityScale = 0;
     b.vel.x = -2;
     b.rotationLock = true;
-    burgers.push(b);
+    b.debug = true;
+    b.active = true;
 }
 
-// MASTER LOOP
+// control loop
 q5.update = function () {
     camera.x = 0;
     camera.y = 0;
-
     background('#f1f0d1');
 
     if (gameState === 'start') {
         drawStartScreen();
-    } else {
+    }
+
+    else {
         drawGame();
     }
 };
