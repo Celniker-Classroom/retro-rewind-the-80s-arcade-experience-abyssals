@@ -10,16 +10,16 @@ let player, playButton;
 let score = 0;
 let tick = 0;
 
-let lettuces = [];
-let burgers = [];
+let lettuces = new Group();
+let burgers = new Group();
 
 // player
 player = new Sprite();
 player.img = 'sprites/player.png';
 player.x = 0;
 player.y = -25;
-player.w = 100;
-player.h = 100;
+player.w = 1;
+player.h = 34;
 player.color = '#00f0ff';
 player.stroke = '#ff007f';
 player.strokeWeight = 3;
@@ -29,11 +29,12 @@ player.sleeping = true; // freeze until game starts
 
 // ground
 let ground = new Sprite();
-ground.y = -275;
+ground.y = 250;
 ground.w = 800;
-ground.h = 40;
-ground.collider = 'static';
-ground.visible = false;
+ground.h = 30;
+ground.physics = STATIC;
+ground.color = '#654321';
+ground.visible = true;
 
 // play button
 playButton = new Sprite();
@@ -44,14 +45,17 @@ playButton.h = 70;
 playButton.color = '#ff007f';
 playButton.stroke = '#00f0ff';
 playButton.strokeWeight = 3;
-playButton.collider = 'static';
+
 
 // start game
 function startGame() {
     gameState = 'playing';
     playButton.visible = false;
-
-    player.sleeping = false; // unfreeze player
+    player.visible = true;
+    player.sleeping = false;
+    player.vel.x = 0;
+    player.vel.y = 0;
+    player.rotation = 0;
 }
 
 // start screen
@@ -87,6 +91,7 @@ function drawStartScreen() {
 function drawGame() {
     world.gravity.y = 6.5;
     player.visible = true;
+    player.vel.x = 0;
     // jump
     if (mouse.presses() || kb.presses('space')) {
         player.vel.y = -4;
@@ -100,9 +105,7 @@ function drawGame() {
     // LETTUCE
     for (let i = lettuces.length - 1; i >= 0; i--) {
         let l = lettuces[i];
-
-        l.vel.x = -2.5;          // MOVE LEFT (kinematic works)
-        l.collider = 'kinematic';
+        l.vel.x = -2.5;
 
         if (player.overlaps(l)) {
             score = max(0, score - 1);
@@ -120,9 +123,7 @@ function drawGame() {
     // BURGER
     for (let i = burgers.length - 1; i >= 0; i--) {
         let b = burgers[i];
-
         b.vel.x = -2;
-        b.collider = 'kinematic';
 
         if (player.overlaps(b)) {
             score += 1;
@@ -148,47 +149,39 @@ function drawGame() {
 function spawnLettuce() {
     let l = new Sprite();
     l.img = 'sprites/lettuce.png';
-
     l.x = 380;
     l.y = random(-200, 200);
     l.w = 45;
     l.h = 45;
-
-    l.collider = 'kinematic';
+    l.gravityScale = 0;
+    l.collider = 'none';
+    l.gravityScale = 0;
     l.vel.x = -2.5;
-
+    l.rotationLock = true;
     lettuces.push(l);
 }
 
-// spawn burger (animated)
+// spawn burger
 function spawnBurger() {
     let b = new Sprite();
     b.img = 'sprites/burger.png';
-
     b.x = 380;
     b.y = random(-200, 200);
     b.w = 50;
     b.h = 50;
-
-    b.collider = 'kinematic';
+    b.collider = 'none';
+    b.gravityScale = 0;
     b.vel.x = -2;
-
+    b.rotationLock = true;
     burgers.push(b);
 }
 
 // MASTER LOOP
 q5.update = function () {
-
-    background('#f1f0d1');
-
-    world.step();
-
     camera.x = 0;
     camera.y = 0;
 
-    camera.on();
-    allSprites.draw();
-    camera.off();
+    background('#f1f0d1');
 
     if (gameState === 'start') {
         drawStartScreen();
