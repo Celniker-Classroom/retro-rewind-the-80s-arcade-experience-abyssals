@@ -116,11 +116,11 @@ function drawGame() {
 
     tick++;
 
-    if (tick % 180 === 0) {
+    if (tick % 70 === 0) {
         spawnLettuce();
     }
 
-    if (tick % 150 === 0) {
+    if (tick % 140 === 0) {
         spawnBurger();
     }
 
