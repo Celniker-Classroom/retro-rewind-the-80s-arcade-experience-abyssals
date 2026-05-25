@@ -8,6 +8,7 @@ let gameState = 'start';
 let player;
 let score = 0;
 let tick = 0;
+let finalScore = 0;
 
 // groups
 let lettuces = new Group();
@@ -170,6 +171,50 @@ function drawHowToPlay() {
     }
 }
 
+function drawGameOver() {
+    background('#161925');
+    fill('#FF4FD8');
+    textAlign(CENTER, CENTER);
+    textSize(54);
+    text('GAME OVER', 0, -60);
+    fill('#ffffff');
+    textSize(28);
+    text('You were too healthy.', 0, 20);
+    fill('#00FF9C');
+    textSize(20);
+    text('CLICK TO RETURN TO MENU', 0, 140);
+    if (mouse.presses()) {
+        for (let l of lettuces) {
+            l.active = false;
+            l.visible = false;
+            l.collider = 'none';
+            l.x = -9999;
+            l.y = -9999;
+            l.vel.x = 0;
+            l.vel.y = 0;
+        }
+        for (let b of burgers) {
+            b.active = false;
+            b.visible = false;
+            b.collider = 'none';
+            b.x = -9999;
+            b.y = -9999;
+            b.vel.x = 0;
+            b.vel.y = 0;
+        }
+        score = 0;
+        tick = 0;
+        player.x = 0;
+        player.y = -25;
+        player.vel.x = 0;
+        player.vel.y = 0;
+        player.rotation = 0;
+        player.sleeping = true;
+        player.visible = false;
+        gameState = 'start';
+    }
+}
+
 // game loop
 function drawGame() {
     world.gravity.y = 6.5;
@@ -201,8 +246,17 @@ function drawGame() {
         if (!l.active) continue;
 
         if (player.overlaps(l)) {
-            score = max(0, score - 1);
+            score -= 1;
             lettucesToRemove.push(l);
+
+            if (score <= -5) {
+                finalScore = score;
+                gameState = 'gameOver';
+
+                player.sleeping = true;
+                player.vel.x = 0;
+                player.vel.y = 0;
+            }
         }
 
         else if (l.x < -450) {
@@ -298,5 +352,9 @@ q5.update = function () {
 
     else if (gameState === 'playing') {
         drawGame();
+    }
+
+    else if (gameState === 'gameOver') {
+        drawGameOver();
     }
 };
