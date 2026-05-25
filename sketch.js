@@ -5,9 +5,7 @@ allSprites.pixelPerfect = true;
 
 //global var
 let gameState = 'start';
-
 let player;
-
 let score = 0;
 let tick = 0;
 
@@ -55,7 +53,15 @@ let playButton = {
     h: 70
 };
 
-// START GAME
+// how to play button
+let howToButton = {
+    x: 0,
+    y: 190,
+    w: 220,
+    h: 60
+};
+
+// start game
 function startGame() {
     gameState = 'playing';
     ground.visible = true;
@@ -67,7 +73,7 @@ function startGame() {
     player.rotation = 0;
 }
 
-// START SCREEN
+// create start screen
 function drawStartScreen() {
     world.gravity.y = 0;
     fill('#00FF9C');
@@ -100,16 +106,67 @@ function drawStartScreen() {
         playButton.y
     );
 
-    // click detection
+    // htp button
+    fill('#4B7BFF');
+    stroke('#00FF9C');
+    strokeWeight(4);
+    rect(
+        howToButton.x,
+        howToButton.y,
+        howToButton.w,
+        howToButton.h
+    );
+    fill('#ffffff');
+    strokeWeight(0);
+    textSize(20);
+
+    text(
+        'HOW TO PLAY',
+        howToButton.x,
+        howToButton.y
+    );
+
     if (mouse.presses()) {
-        const insideButton =
+        // play btn
+        const insidePlay =
             mouse.x > playButton.x - playButton.w / 2 &&
             mouse.x < playButton.x + playButton.w / 2 &&
             mouse.y > playButton.y - playButton.h / 2 &&
             mouse.y < playButton.y + playButton.h / 2;
-        if (insideButton) {
+
+        // htp btn
+        const insideHowTo =
+            mouse.x > howToButton.x - howToButton.w / 2 &&
+            mouse.x < howToButton.x + howToButton.w / 2 &&
+            mouse.y > howToButton.y - howToButton.h / 2 &&
+            mouse.y < howToButton.y + howToButton.h / 2;
+
+        if (insidePlay) {
             startGame();
         }
+
+        if (insideHowTo) {
+            gameState = 'howToPlay';
+        }
+    }  
+}
+
+function drawHowToPlay() {
+    background('#161925');
+    fill('#00FF9C');
+    textAlign(CENTER, CENTER);
+    textSize(42);
+    text('HOW TO PLAY', 0, -180);
+    textSize(24);
+    fill('#ffffff');
+    text('Collect burgers for points.', 0, -60);
+    text('Avoid lettuce.', 0, 0);
+    text('Click or press SPACE to jump', 0, 60);
+    fill('#FF4FD8');
+    textSize(20);
+    text('CLICK ANYWHERE TO RETURN', 0, 180);
+    if (mouse.presses()) {
+        gameState = 'start';
     }
 }
 
@@ -234,7 +291,12 @@ q5.update = function () {
     if (gameState === 'start') {
         drawStartScreen();
     }
-    else {
+
+    else if (gameState === 'howToPlay') {
+        drawHowToPlay();
+    }
+
+    else if (gameState === 'playing') {
         drawGame();
     }
 };
