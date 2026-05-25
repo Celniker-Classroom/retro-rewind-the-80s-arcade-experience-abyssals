@@ -12,6 +12,11 @@ let tick = 0;
 // groups
 let lettuces = new Group();
 let burgers = new Group();
+let introFood = new Group();
+
+// intro stuff
+let exploded = false;
+let introStarted = false;
 
 // player
 player = new Sprite();
@@ -23,6 +28,18 @@ player.diameter = 56;
 player.collider = 'dynamic';
 player.rotationLock = true;
 player.sleeping = true;
+
+// intro player
+let introPlayer = new Sprite();
+introPlayer.img = 'sprites/player.png';
+introPlayer.x = 0;
+introPlayer.y = -320;
+introPlayer.scale = 2;
+introPlayer.diameter = 56;
+introPlayer.collider = 'dynamic';
+introPlayer.rotationLock = false;
+introPlayer.visible = true;
+introPlayer.sleeping = true;
 
 // ground
 let ground = new Sprite();
@@ -61,11 +78,35 @@ let howToButton = {
     h: 60
 };
 
+// create intro ani
+function createIntroPile() {
+    for (let i = 0; i < 20; i++) {
+        let f = new introFood.Sprite();
+        if (random() > 0.5) {
+            f.img = 'sprites/burger.png';
+        }
+        else {
+            f.img = 'sprites/lettuce.png';
+        }
+        f.x = random(-120, 120);
+        f.y = random(185, 230);
+        f.scale = 1.5;
+        f.collider = 'dynamic';
+        f.rotationLock = false;
+    }
+}
+
+createIntroPile();
+
 // start game
 function startGame() {
     gameState = 'playing';
     ground.visible = true;
     ceiling.visible = true;
+    introPlayer.visible = false;
+    for (let f of introFood) {
+        f.remove();
+    }
     player.visible = true;
     player.sleeping = false;
     player.vel.x = 0;
@@ -75,7 +116,42 @@ function startGame() {
 
 // create start screen
 function drawStartScreen() {
-    world.gravity.y = 0;
+    world.gravity.y = 6.5;
+
+    if (!introStarted) {
+        introStarted = true;
+        introPlayer.sleeping = false;
+    }
+
+    if (!exploded && introPlayer.y > 170) {
+        exploded = true;
+        world.explodeAt(introPlayer.x, introPlayer.y, 120);
+    }
+
+    if (mouse.presses()) {
+        // play btn
+        const insidePlay =
+            mouse.x > playButton.x - playButton.w / 2 &&
+            mouse.x < playButton.x + playButton.w / 2 &&
+            mouse.y > playButton.y - playButton.h / 2 &&
+            mouse.y < playButton.y + playButton.h / 2;
+
+        // htp btn
+        const insideHowTo =
+            mouse.x > howToButton.x - howToButton.w / 2 &&
+            mouse.x < howToButton.x + howToButton.w / 2 &&
+            mouse.y > howToButton.y - howToButton.h / 2 &&
+            mouse.y < howToButton.y + howToButton.h / 2;
+
+        if (insidePlay) {
+            startGame();
+        }
+
+        if (insideHowTo) {
+            gameState = 'howToPlay';
+        }
+    }  
+    
     fill('#00FF9C');
     textSize(54);
     textAlign(CENTER, CENTER);
@@ -125,30 +201,6 @@ function drawStartScreen() {
         howToButton.x,
         howToButton.y
     );
-
-    if (mouse.presses()) {
-        // play btn
-        const insidePlay =
-            mouse.x > playButton.x - playButton.w / 2 &&
-            mouse.x < playButton.x + playButton.w / 2 &&
-            mouse.y > playButton.y - playButton.h / 2 &&
-            mouse.y < playButton.y + playButton.h / 2;
-
-        // htp btn
-        const insideHowTo =
-            mouse.x > howToButton.x - howToButton.w / 2 &&
-            mouse.x < howToButton.x + howToButton.w / 2 &&
-            mouse.y > howToButton.y - howToButton.h / 2 &&
-            mouse.y < howToButton.y + howToButton.h / 2;
-
-        if (insidePlay) {
-            startGame();
-        }
-
-        if (insideHowTo) {
-            gameState = 'howToPlay';
-        }
-    }  
 }
 
 function drawHowToPlay() {
