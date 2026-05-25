@@ -31,9 +31,9 @@ let ground = new Sprite();
 ground.x = 0;
 ground.y = 250;
 ground.w = 800;
-ground.h = 40;
+ground.h = 45;
 ground.physics = STATIC;
-ground.color = '#654321';
+ground.color = '#4B2E83';
 ground.visible = false;
 ground.rotationLock = true;
 
@@ -41,9 +41,9 @@ let ceiling = new Sprite();
 ceiling.x = 0;
 ceiling.y = -250;
 ceiling.w = 800;
-ceiling.h = 40;
+ceiling.h = 45;
 ceiling.physics = STATIC;
-ceiling.color = '#654321';
+ceiling.color = '#6A3EA1';
 ceiling.visible = false;
 ceiling.rotationLock = true;
 
@@ -70,7 +70,7 @@ function startGame() {
 // START SCREEN
 function drawStartScreen() {
     world.gravity.y = 0;
-    fill('#085f1b');
+    fill('#00FF9C');
     textSize(54);
     textAlign(CENTER, CENTER);
     strokeWeight(0);
@@ -78,9 +78,9 @@ function drawStartScreen() {
 
     // button
     rectMode(CENTER);
-    fill('#085f1b');
-    stroke('#085f1b');
-    strokeWeight(3);
+    fill('#FF4FD8');
+    stroke('#00FF9C');
+    strokeWeight(4);
     rect(
         playButton.x,
         playButton.y,
@@ -126,11 +126,11 @@ function drawGame() {
 
     tick++;
 
-    if (tick % 40 === 0) {
+    if (tick % 20 === 0) {
         spawnLettuce();
     }
 
-    if (tick % 160 === 0) {
+    if (tick % 40 === 0) {
         spawnBurger();
     }
 
@@ -187,7 +187,7 @@ function drawGame() {
     }  
 
     // score
-    fill('#085f1b');
+    fill('#00FF9C');
     strokeWeight(0);
     textSize(24);
     textAlign(LEFT, TOP);
@@ -220,7 +220,7 @@ function spawnBurger() {
     b.scale = 1.5;
     b.collider = 'sensor';
     b.gravityScale = 0;
-    b.vel.x = -5;
+    b.vel.x = -8;
     b.rotationLock = true;
     b.active = true;
 }
@@ -229,12 +229,11 @@ function spawnBurger() {
 q5.update = function () {
     camera.x = 0;
     camera.y = 0;
-    background('#f1f0d1');
+    background('#161925');
 
     if (gameState === 'start') {
         drawStartScreen();
     }
-
     else {
         drawGame();
     }
