@@ -161,7 +161,7 @@ function drawHowToPlay() {
     textSize(24);
     fill('#ffffff');
     text('Collect burgers for points.', 0, -60);
-    text('Avoid lettuce.', 0, 0);
+    text('Avoid lettuce; too much and you die.', 0, 0);
     text('Click or press SPACE to jump', 0, 60);
     fill('#FF4FD8');
     textSize(20);
