@@ -62,7 +62,6 @@ let howToButton = {
     h: 60
 };
 
-// start game
 function startGame() {
     gameState = 'playing';
     ground.visible = true;
@@ -74,7 +73,6 @@ function startGame() {
     player.rotation = 0;
 }
 
-// create start screen
 function drawStartScreen() {
     world.gravity.y = 0;
     fill('#00FF9C');
@@ -215,7 +213,6 @@ function drawGameOver() {
     }
 }
 
-// game loop
 function drawGame() {
     world.gravity.y = 6.5;
     player.visible = true;
@@ -305,7 +302,6 @@ function drawGame() {
     text('Score: ' + score, -380, -220);
 }
 
-// spawn lettuce
 function spawnLettuce() {
     let l = new lettuces.Sprite();
     l.img = 'sprites/lettuce.png';
@@ -320,7 +316,6 @@ function spawnLettuce() {
     l.active = true;
 }
 
-// spawn burger
 function spawnBurger() {
     let b = new burgers.Sprite();
     b.img = 'sprites/burger.png';
@@ -336,7 +331,6 @@ function spawnBurger() {
     b.active = true;
 }
 
-// control loop
 q5.update = function () {
     camera.x = 0;
     camera.y = 0;
