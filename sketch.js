@@ -49,7 +49,7 @@ ceiling.rotationLock = true;
 // play button
 let playButton = {
     x: 0,
-    y: 100,
+    y: 40,
     w: 220,
     h: 70
 };
@@ -57,8 +57,16 @@ let playButton = {
 // how to play button
 let howToButton = {
     x: 0,
-    y: 190,
+    y: 120,
     w: 220,
+    h: 60
+};
+
+// write-up button
+let writeUpButton = {
+    x: 0,
+    y: 200,
+    w: 260,
     h: 60
 };
 
@@ -79,13 +87,11 @@ function drawStartScreen() {
     textSize(54);
     textAlign(CENTER, CENTER);
     strokeWeight(0);
-    text('BigBacks', 0, -45);
+    text('BigBacks', 0, -110);
 
     // button
     rectMode(CENTER);
     fill('#FF4FD8');
-    stroke('#00FF9C');
-    strokeWeight(4);
     rect(
         playButton.x,
         playButton.y,
@@ -107,8 +113,6 @@ function drawStartScreen() {
 
     // htp button
     fill('#4B7BFF');
-    stroke('#00FF9C');
-    strokeWeight(4);
     rect(
         howToButton.x,
         howToButton.y,
@@ -119,10 +123,30 @@ function drawStartScreen() {
     strokeWeight(0);
     textSize(20);
 
+    // htp button text
     text(
         'HOW TO PLAY',
         howToButton.x,
         howToButton.y
+    );
+
+    // write-up button
+    fill('#FFB347');
+    rect(
+        writeUpButton.x,
+        writeUpButton.y,
+        writeUpButton.w,
+        writeUpButton.h
+    );
+
+    fill('#ffffff');
+    strokeWeight(0);
+    textSize(20);
+
+    text(
+        'PROJECT WRITE-UP',
+        writeUpButton.x,
+        writeUpButton.y
     );
 
     if (mouse.presses()) {
@@ -140,12 +164,23 @@ function drawStartScreen() {
             mouse.y > howToButton.y - howToButton.h / 2 &&
             mouse.y < howToButton.y + howToButton.h / 2;
 
+        // writeup btn
+        const insideWriteUp =
+            mouse.x > writeUpButton.x - writeUpButton.w / 2 &&
+            mouse.x < writeUpButton.x + writeUpButton.w / 2 &&
+            mouse.y > writeUpButton.y - writeUpButton.h / 2 &&
+            mouse.y < writeUpButton.y + writeUpButton.h / 2;
+
         if (insidePlay) {
             startGame();
         }
 
         if (insideHowTo) {
             gameState = 'howToPlay';
+        }
+
+        if (insideWriteUp) {
+            gameState = 'writeUp';
         }
     }  
 }
@@ -159,11 +194,53 @@ function drawHowToPlay() {
     textSize(24);
     fill('#ffffff');
     text('Collect burgers for points.', 0, -60);
-    text('Avoid lettuce; too much and you die.', 0, 0);
+    text('Avoid lettuce; don\'t eat too much!', 0, 0);
     text('Click or press SPACE to jump', 0, 60);
     fill('#FF4FD8');
     textSize(20);
     text('CLICK ANYWHERE TO RETURN', 0, 180);
+    if (mouse.presses()) {
+        gameState = 'start';
+    }
+}
+
+function drawWriteUp() {
+    background('#161925');
+    textAlign(CENTER, CENTER);
+    fill('#00FF9C');
+    textSize(38);
+    text('PROJECT WRITE-UP', 0, -220);
+    fill('#ffffff');
+    textSize(16);
+
+    text(
+        'Our game, BigBacks, is based off of the 80s-style\n' +
+        'classic game Flappy Bird, itself inspired by Helicopter.\n\n' +
+
+        'We borrowed the same player mechanics, as the player only \n' +
+        'controls vertical movement, while objects move toward the player.\n\n' +
+
+        'However, we added a scoring system using burgers and lettuce,\n' +
+        'instead of the FlappyBirdian instant death obstacles.\n\n' +
+
+        'Burgers increase the score, while lettuce decreases it.\n' +
+        'Eating too much lettuce causes game over.\n\n' +
+
+        'Also unlike Flappy Bird, the player can survive multiple obstacles,\n' +
+        'and burgers/lettuce move at different speeds.\n\n' +
+
+        'All in all, we made some \'big\' changes to the classic game format.\n' +
+        'We hope you enjoy BigBacks!!!',
+        0,
+        0
+    );
+
+    fill('#FF4FD8');
+    textSize(20);
+
+    text(
+        'CLICK ANYWHERE TO RETURN',0,220);
+
     if (mouse.presses()) {
         gameState = 'start';
     }
@@ -225,11 +302,11 @@ function drawGame() {
 
     tick++;
 
-    if (tick % 20 === 0) {
+    if (tick % 30 === 0) {
         spawnLettuce();
     }
 
-    if (tick % 40 === 0) {
+    if (tick % 45 === 0) {
         spawnBurger();
     }
 
@@ -305,7 +382,7 @@ function drawGame() {
 function spawnLettuce() {
     let l = new lettuces.Sprite();
     l.img = 'sprites/lettuce.png';
-    l.x = 380;
+    l.x = 420;
     l.y = random(-200, 200);
     l.scale = 1.5;
     l.diameter = 33;
@@ -319,7 +396,7 @@ function spawnLettuce() {
 function spawnBurger() {
     let b = new burgers.Sprite();
     b.img = 'sprites/burger.png';
-    b.x = 380;
+    b.x = 420;
     b.y = random(-200, 200);
     b.w = 26;
     b.h = 30;
@@ -342,6 +419,10 @@ q5.update = function () {
 
     else if (gameState === 'howToPlay') {
         drawHowToPlay();
+    }
+
+    else if (gameState === 'writeUp') {
+        drawWriteUp();
     }
 
     else if (gameState === 'playing') {
