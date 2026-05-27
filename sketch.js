@@ -48,28 +48,13 @@ ceiling.visible = false;
 ceiling.rotationLock = true;
 
 // play button
-let playButton = {
-    x: 0,
-    y: 40,
-    w: 220,
-    h: 70
-};
+let playButton = {x: 0,y: 40,w: 220,h: 70};
 
 // how to play button
-let howToButton = {
-    x: 0,
-    y: 120,
-    w: 220,
-    h: 60
-};
+let howToButton = {x: 0,y: 120,w: 220,h: 60};
 
 // write-up button
-let writeUpButton = {
-    x: 0,
-    y: 200,
-    w: 260,
-    h: 60
-};
+let writeUpButton = {x: 0,y: 200,w: 260,h: 60};
 
 function startGame() {
     gameState = 'playing';
@@ -84,13 +69,14 @@ function startGame() {
 
 function drawStartScreen() {
     world.gravity.y = 0;
+    player.visible = false;
     fill('#00FF9C');
     textSize(54);
     textAlign(CENTER, CENTER);
     strokeWeight(0);
     text('BigBacks', 0, -110);
 
-    // button
+    // play button
     rectMode(CENTER);
     fill('#FF4FD8');
     rect(
@@ -99,10 +85,6 @@ function drawStartScreen() {
         playButton.w,
         playButton.h
     );
-
-    player.visible = false;
-
-    // button text
     fill('#ffffff');
     strokeWeight(0);
     textSize(24);
@@ -123,8 +105,6 @@ function drawStartScreen() {
     fill('#ffffff');
     strokeWeight(0);
     textSize(20);
-
-    // htp button text
     text(
         'HOW TO PLAY',
         howToButton.x,
@@ -139,11 +119,9 @@ function drawStartScreen() {
         writeUpButton.w,
         writeUpButton.h
     );
-
     fill('#ffffff');
     strokeWeight(0);
     textSize(20);
-
     text(
         'PROJECT WRITE-UP',
         writeUpButton.x,
@@ -231,16 +209,11 @@ function drawWriteUp() {
         'and burgers/lettuce move at different speeds.\n\n' +
 
         'All in all, we made some \'big\' changes to the classic game format.\n' +
-        'We hope you enjoy BigBacks!!!',
-        0,
-        0
-    );
+        'We hope you enjoy BigBacks!!!', 0, 0);
 
     fill('#FF4FD8');
     textSize(20);
-
-    text(
-        'CLICK ANYWHERE TO RETURN',0,220);
+    text('CLICK ANYWHERE TO RETURN',0,220);
 
     if (mouse.presses()) {
         gameState = 'start';
@@ -252,7 +225,7 @@ function drawGameOver() {
     fill('#FF4FD8');
     textAlign(CENTER, CENTER);
     textSize(54);
-    text('GAME OVER', 0, -60);
+    text('Game Over :(', 0, -60);
     fill('#ffffff');
     textSize(28);
     text('You were too healthy.', 0, 20);
@@ -312,12 +285,11 @@ function drawGame() {
         spawnBurger();
     }
 
-    // REMOVE LISTS
+    // remove lists
     let lettucesToRemove = [];
     let burgersToRemove = [];
 
-    // LETTUCE
-    // LETTUCE
+    // lettuce score counter
     for (let l of lettuces) {
         if (!l.active) continue;
 
@@ -342,7 +314,7 @@ function drawGame() {
         }
     }
 
-    // BURGER
+    // burger score counter
     for (let b of burgers) {
         if (!b.active) continue;
 
