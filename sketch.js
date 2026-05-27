@@ -230,6 +230,9 @@ function drawGameOver() {
     textSize(28);
     text('You were too healthy.', 0, 20);
     fill('#00FF9C');
+    textSize(24);
+    text('Final Score: ' + finalScore, 0, 70);
+    fill('#00FF9C');
     textSize(20);
     text('CLICK TO RETURN TO MENU', 0, 140);
     if (mouse.presses()) {
