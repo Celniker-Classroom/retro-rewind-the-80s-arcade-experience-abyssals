@@ -8,6 +8,7 @@ let gameState = 'start';
 let player;
 let score = 0;
 let tick = 0;
+let lettucesEaten = 0;
 let finalScore = 0;
 
 // groups
@@ -278,6 +279,7 @@ function drawGameOver() {
             b.vel.y = 0;
         }
         score = 0;
+        lettucesEaten = 0;
         tick = 0;
         player.x = 0;
         player.y = -25;
@@ -321,9 +323,11 @@ function drawGame() {
 
         if (player.overlaps(l)) {
             score -= 1;
+            lettucesEaten += 1;
+
             lettucesToRemove.push(l);
 
-            if (score <= -5) {
+            if (lettucesEaten >= 25) {
                 finalScore = score;
                 gameState = 'gameOver';
 
@@ -377,6 +381,10 @@ function drawGame() {
     textSize(24);
     textAlign(LEFT, TOP);
     text('Score: ' + score, -380, -220);
+
+    // lettuce eaten
+    textAlign(RIGHT, TOP);
+    text('Lettuces: ' + lettucesEaten + '/25', 380, -220);
 }
 
 function spawnLettuce() {
